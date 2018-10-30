@@ -1,0 +1,104 @@
+/* remove default margin and padding from body */
+body {
+    padding: 0;
+    margin: 0;
+    background-color:"lightgray";
+    /* background-image: url(../images/drink-image.jpg); */
+  }
+
+.navbar {
+    background-color: "brown";
+}
+
+/* set map, body, and html to 100% of the screen size */
+#map,
+body,
+html {
+    height: 100%;
+    }
+
+#mapcontainer {
+    width: 80%;
+    margin: 0 10%;
+    height: 100%;
+    
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+#drinkButton {
+    text-align: center;
+    background-color: white;
+    border: none;
+    color: navy;
+    padding: 15px 32px;
+    text-decoration: none;
+    font-size: 16px;
+}
+#beer {
+    border: 2px solid navy;
+    border-radius: 12px;
+}
+#wine {
+    border: 2px solid navy;
+    border-radius: 12px;
+}
+#spirits {
+    border: 2px solid navy;
+    border-radius: 12px;
+}
+#other {
+    border: 2px solid navy;
+    border-radius: 12px;
+}
+
+#consumeRate {
+    position: absolute;
+    background: green;
+    width: 300px;
+    height: 200px;
+    z-index: 15;
+    top: 50%;
+    left: 50%;
+    margin: -100px 0 0 -150px;
+}
+body {
+    font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+    fill: none;
+    stroke: rgb(16, 1, 26);
+    shape-rendering: crispEdges;
+}
+.dot {
+    stroke: rgb(197, 121, 248);
+    fill: rgb(137, 0, 228);
+}
+
+#consumeGDP {
+    position: absolute;
+    background: red;
+    width: 300px;
+    height: 200px;
+    z-index: 15;
+    top: 50%;
+    left: 50%;
+    margin: -100px 0 0 -150px;
+}
+body {
+    font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+    fill: none;
+    stroke: rgb(16, 1, 26);
+    shape-rendering: crispEdges;
+}
+.dot {
+    stroke: rgb(197, 121, 248);
+    fill: rgb(137, 0, 228);
+}

@@ -1,0 +1,2913 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Worldwide Alcohol Consumption</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <!-- Leaflet CSS & JS-->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+        crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+        crossorigin=""></script>
+
+    <!-- d3 JavaScript -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <!-- Leaflet-Choropleth JavaScript -->
+    <!-- <script type="text/javascript" src="static/js/choropleth.js"></script> -->
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+
+    <!-- load jQuery and tablesorter scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                    aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+                <a class="navbar-brand" href="/home" style="color: white; background-color: navy;">
+                    <span class="nav-color">World Alcohol Consumption</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <ul class="nav navbar-nav navbar-left" style="background-color:rgb(120, 234, 225);">
+                    <li>
+                        <a href="/datatable">Data</a>
+                    </li>
+                    <li>
+                        <a href="/summary">Summary</a>
+                    </li>
+                    <li>
+                        <a href="/rate">Consumption Rate</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <h2 style="text-align:center">Data Table and Sources</h2>
+                            <hr>
+                            <p style="text-indent: 25px">Data compiled from the following sources using Python Pandas:
+                                <li style="text-indent: 50px">
+                                    <a href="https://en.wikipedia.org/wiki/List_of_countries_by_alcohol_consumption_per_capita">Alcohol Consumption per Capita</a>
+                                </li>
+                                <li style="text-indent: 50px">
+                                    <a href="https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)">GDP per International Montetary Fund</a>
+                                </li>
+                                <li style="text-indent: 50px">
+                                    <a href="https://drinkingage.procon.org/view.resource.php?resourceID=004294">Minimum Legal Drinking Age by Country</a>
+                                </li>
+                                <li style="text-indent: 50px">
+                                    <a href="https://www.worldlifeexpectancy.com/cause-of-death/alcohol/by-country/">World Death Rate by Alcohol</a>
+                                </li>
+                            </p>
+                            <div class="table1">
+                                <table id="example" class=" table table-bordered table-hover table-condensed ">
+                                    <thead>
+                                        <tr>
+                                            <th title="Field #1 ">Index</th>
+                                            <th title="Field #2 ">Country</th>
+                                            <th title="Field #3 ">Country
+                                                <br/>Code
+                                            </th>
+                                            <th title="Field #4 ">Total</th>
+                                            <th title="Field #5 ">Recorded
+                                                <br/>Consumption
+                                            </th>
+                                            <th title="Field #6 ">Unrecorded
+                                                <br/>Consumption
+                                            </th>
+                                            <th title="Field #7 ">Beer
+                                                <br/>Percent (%)
+                                            </th>
+                                            <th title="Field #8 ">Wine
+                                                <br/>Percent (%)
+                                            </th>
+                                            <th title="Field #9 ">Spirits
+                                                <br/>Percent (%)
+                                            </th>
+                                            <th title="Field #10 ">Other
+                                                <br/>Percent (%)
+                                            </th>
+                                            <th title="Field #11 ">GDP
+                                                <br/>(US$MM)
+                                            </th>
+                                            <th title="Field #12 ">Purchase
+                                                <br/>Age
+                                            </th>
+                                            <th title="Field #13 ">Death Rate
+                                                <br/>(per 100,000)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td align="right ">0</td>
+                                            <td>Belarus</td>
+                                            <td>BLR</td>
+                                            <td align="right ">17.6</td>
+                                            <td align="right ">14.4</td>
+                                            <td align="right ">3.2</td>
+                                            <td align="right ">17.3</td>
+                                            <td align="right ">5.2</td>
+                                            <td align="right ">46.6</td>
+                                            <td align="right ">30.9</td>
+                                            <td> $54,436 </td>
+                                            <td>18</td>
+                                            <td align="right ">8.18</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">1</td>
+                                            <td>Moldova</td>
+                                            <td>MDA</td>
+                                            <td align="right ">16.8</td>
+                                            <td align="right ">6.3</td>
+                                            <td align="right ">10.5</td>
+                                            <td align="right ">30.4</td>
+                                            <td align="right ">5.1</td>
+                                            <td align="right ">64.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $7,945 </td>
+                                            <td>18</td>
+                                            <td align="right ">7.02</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">2</td>
+                                            <td>Lithuania</td>
+                                            <td>LTU</td>
+                                            <td align="right ">15.5</td>
+                                            <td align="right ">12.9</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">46.5</td>
+                                            <td align="right ">7.8</td>
+                                            <td align="right ">34.1</td>
+                                            <td align="right ">11.6</td>
+                                            <td> $47,263 </td>
+                                            <td>18</td>
+                                            <td align="right ">8.26</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">3</td>
+                                            <td>Russia</td>
+                                            <td>RUS</td>
+                                            <td align="right ">15.1</td>
+                                            <td align="right ">11.5</td>
+                                            <td align="right ">3.6</td>
+                                            <td align="right ">37.6</td>
+                                            <td align="right ">11.4</td>
+                                            <td align="right ">51.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $1,527,469 </td>
+                                            <td>18</td>
+                                            <td align="right ">14.87</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">4</td>
+                                            <td>Romania</td>
+                                            <td>ROU</td>
+                                            <td align="right ">14.4</td>
+                                            <td align="right ">10.4</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">50.0</td>
+                                            <td align="right ">28.9</td>
+                                            <td align="right ">21.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $211,315 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.16</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">5</td>
+                                            <td>Ukraine</td>
+                                            <td>UKR</td>
+                                            <td align="right ">13.9</td>
+                                            <td align="right ">8.9</td>
+                                            <td align="right ">5.0</td>
+                                            <td align="right ">40.5</td>
+                                            <td align="right ">9.0</td>
+                                            <td align="right ">48.0</td>
+                                            <td align="right ">2.6</td>
+                                            <td> $109,321 </td>
+                                            <td>18</td>
+                                            <td align="right ">6.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">6</td>
+                                            <td>Hungary</td>
+                                            <td>HUN</td>
+                                            <td align="right ">13.3</td>
+                                            <td align="right ">11.3</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">36.3</td>
+                                            <td align="right ">29.4</td>
+                                            <td align="right ">34.3</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $152,284 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.08</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">7</td>
+                                            <td>Czech Republic</td>
+                                            <td>CZE</td>
+                                            <td align="right ">13.0</td>
+                                            <td align="right ">11.8</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">53.5</td>
+                                            <td align="right ">20.5</td>
+                                            <td align="right ">26.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $213,189 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">8</td>
+                                            <td>Slovakia</td>
+                                            <td>SVK</td>
+                                            <td align="right ">13.0</td>
+                                            <td align="right ">11.4</td>
+                                            <td align="right ">1.7</td>
+                                            <td align="right ">30.1</td>
+                                            <td align="right ">18.3</td>
+                                            <td align="right ">46.2</td>
+                                            <td align="right ">5.5</td>
+                                            <td> $95,938 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.44</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">9</td>
+                                            <td>Portugal</td>
+                                            <td>PRT</td>
+                                            <td align="right ">12.9</td>
+                                            <td align="right ">11.0</td>
+                                            <td align="right ">1.9</td>
+                                            <td align="right ">30.8</td>
+                                            <td align="right ">55.5</td>
+                                            <td align="right ">10.9</td>
+                                            <td align="right ">2.8</td>
+                                            <td> $218,064 </td>
+                                            <td>16</td>
+                                            <td align="right ">1.18</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">10</td>
+                                            <td>Serbia</td>
+                                            <td>SRB</td>
+                                            <td align="right ">12.6</td>
+                                            <td align="right ">9.6</td>
+                                            <td align="right ">2.9</td>
+                                            <td align="right ">51.5</td>
+                                            <td align="right ">23.9</td>
+                                            <td align="right ">24.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $41,471 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.35</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">11</td>
+                                            <td>Grenada</td>
+                                            <td>GRD</td>
+                                            <td align="right ">12.5</td>
+                                            <td align="right ">11.9</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">29.3</td>
+                                            <td align="right ">4.3</td>
+                                            <td align="right ">66.2</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $1,111 </td>
+                                            <td>16</td>
+                                            <td align="right ">2.74</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">12</td>
+                                            <td>Poland</td>
+                                            <td>POL</td>
+                                            <td align="right ">12.5</td>
+                                            <td align="right ">10.9</td>
+                                            <td align="right ">1.6</td>
+                                            <td align="right ">55.1</td>
+                                            <td align="right ">9.3</td>
+                                            <td align="right ">35.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $524,886 </td>
+                                            <td>18</td>
+                                            <td align="right ">6.25</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">13</td>
+                                            <td>Latvia</td>
+                                            <td>LVA</td>
+                                            <td align="right ">12.3</td>
+                                            <td align="right ">10.5</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">46.9</td>
+                                            <td align="right ">10.7</td>
+                                            <td align="right ">37.0</td>
+                                            <td align="right ">5.4</td>
+                                            <td> $30,319 </td>
+                                            <td>18</td>
+                                            <td align="right ">8.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">14</td>
+                                            <td>Finland</td>
+                                            <td>FIN</td>
+                                            <td align="right ">12.3</td>
+                                            <td align="right ">10.0</td>
+                                            <td align="right ">2.3</td>
+                                            <td align="right ">46.0</td>
+                                            <td align="right ">17.5</td>
+                                            <td align="right ">24.0</td>
+                                            <td align="right ">12.6</td>
+                                            <td> $253,244 </td>
+                                            <td>18</td>
+                                            <td align="right ">7.47</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">15</td>
+                                            <td>South Korea</td>
+                                            <td>KOR</td>
+                                            <td align="right ">12.3</td>
+                                            <td align="right ">9.8</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">25.0</td>
+                                            <td align="right ">1.6</td>
+                                            <td align="right ">2.9</td>
+                                            <td align="right ">70.5</td>
+                                            <td> $1,538,030 </td>
+                                            <td>19</td>
+                                            <td align="right ">1.17</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">16</td>
+                                            <td>France</td>
+                                            <td>FRA</td>
+                                            <td align="right ">12.2</td>
+                                            <td align="right ">11.8</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">18.8</td>
+                                            <td align="right ">56.4</td>
+                                            <td align="right ">23.1</td>
+                                            <td align="right ">1.7</td>
+                                            <td> $2,583,560 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.89</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">17</td>
+                                            <td>Australia</td>
+                                            <td>AUS</td>
+                                            <td align="right ">12.2</td>
+                                            <td align="right ">10.4</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">44.0</td>
+                                            <td align="right ">36.7</td>
+                                            <td align="right ">12.5</td>
+                                            <td align="right ">6.8</td>
+                                            <td> $1,379,548 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.20</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">18</td>
+                                            <td>Croatia</td>
+                                            <td>HRV</td>
+                                            <td align="right ">12.2</td>
+                                            <td align="right ">10.2</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">39.5</td>
+                                            <td align="right ">44.8</td>
+                                            <td align="right ">15.4</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $54,516 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">19</td>
+                                            <td>Ireland</td>
+                                            <td>IRL</td>
+                                            <td align="right ">11.9</td>
+                                            <td align="right ">11.4</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">48.1</td>
+                                            <td align="right ">26.1</td>
+                                            <td align="right ">18.7</td>
+                                            <td align="right ">7.7</td>
+                                            <td> $333,994 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.43</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">20</td>
+                                            <td>Luxembourg</td>
+                                            <td>LUX</td>
+                                            <td align="right ">11.9</td>
+                                            <td align="right ">11.4</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">36.2</td>
+                                            <td align="right ">42.8</td>
+                                            <td align="right ">21.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $62,393 </td>
+                                            <td>16</td>
+                                            <td align="right ">2.69</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">21</td>
+                                            <td>Germany</td>
+                                            <td>DEU</td>
+                                            <td align="right ">11.8</td>
+                                            <td align="right ">11.3</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">53.6</td>
+                                            <td align="right ">27.8</td>
+                                            <td align="right ">18.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $3,684,816 </td>
+                                            <td>16</td>
+                                            <td align="right ">4.05</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">22</td>
+                                            <td>Slovenia</td>
+                                            <td>SVN</td>
+                                            <td align="right ">11.6</td>
+                                            <td align="right ">10.6</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">44.5</td>
+                                            <td align="right ">46.9</td>
+                                            <td align="right ">8.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $48,868 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.17</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">23</td>
+                                            <td>United Kingdom</td>
+                                            <td>GBR</td>
+                                            <td align="right ">11.6</td>
+                                            <td align="right ">10.4</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">36.9</td>
+                                            <td align="right ">33.8</td>
+                                            <td align="right ">21.8</td>
+                                            <td align="right ">7.5</td>
+                                            <td> $2,624,529 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.46</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">24</td>
+                                            <td>Denmark</td>
+                                            <td>DNK</td>
+                                            <td align="right ">11.4</td>
+                                            <td align="right ">10.4</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">37.7</td>
+                                            <td align="right ">48.2</td>
+                                            <td align="right ">14.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $324,484 </td>
+                                            <td>18</td>
+                                            <td align="right ">7.51</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">25</td>
+                                            <td>Bulgaria</td>
+                                            <td>BGR</td>
+                                            <td align="right ">11.4</td>
+                                            <td align="right ">10.3</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">39.3</td>
+                                            <td align="right ">16.5</td>
+                                            <td align="right ">44.1</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $56,943 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.84</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">26</td>
+                                            <td>Spain</td>
+                                            <td>ESP</td>
+                                            <td align="right ">11.2</td>
+                                            <td align="right ">10.0</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">49.7</td>
+                                            <td align="right ">20.1</td>
+                                            <td align="right ">28.2</td>
+                                            <td align="right ">1.8</td>
+                                            <td> $1,313,951 </td>
+                                            <td>16</td>
+                                            <td align="right ">0.47</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">27</td>
+                                            <td>Belgium</td>
+                                            <td>BEL</td>
+                                            <td align="right ">11.0</td>
+                                            <td align="right ">10.5</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">49.2</td>
+                                            <td align="right ">36.3</td>
+                                            <td align="right ">14.4</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $494,733 </td>
+                                            <td>16</td>
+                                            <td align="right ">2.34</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">28</td>
+                                            <td>South Africa</td>
+                                            <td>ZAF</td>
+                                            <td align="right ">11.0</td>
+                                            <td align="right ">8.2</td>
+                                            <td align="right ">2.9</td>
+                                            <td align="right ">48.1</td>
+                                            <td align="right ">17.8</td>
+                                            <td align="right ">16.7</td>
+                                            <td align="right ">17.4</td>
+                                            <td> $349,299 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.39</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">29</td>
+                                            <td>New Zealand</td>
+                                            <td>NZL</td>
+                                            <td align="right ">10.9</td>
+                                            <td align="right ">9.3</td>
+                                            <td align="right ">1.6</td>
+                                            <td align="right ">38.2</td>
+                                            <td align="right ">33.9</td>
+                                            <td align="right ">15.2</td>
+                                            <td align="right ">12.5</td>
+                                            <td> $201,485 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.82</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">30</td>
+                                            <td>Gabon</td>
+                                            <td>GAB</td>
+                                            <td align="right ">10.9</td>
+                                            <td align="right ">8.9</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">68.3</td>
+                                            <td align="right ">11.9</td>
+                                            <td align="right ">19.8</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $14,467 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.18</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">31</td>
+                                            <td>Namibia</td>
+                                            <td>NAM</td>
+                                            <td align="right ">10.8</td>
+                                            <td align="right ">6.8</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">96.7</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">2.1</td>
+                                            <td> $12,558 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.44</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">32</td>
+                                            <td>Switzerland</td>
+                                            <td>CHE</td>
+                                            <td align="right ">10.7</td>
+                                            <td align="right ">10.2</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">31.8</td>
+                                            <td align="right ">49.4</td>
+                                            <td align="right ">17.6</td>
+                                            <td align="right ">1.2</td>
+                                            <td> $678,575 </td>
+                                            <td>16</td>
+                                            <td align="right ">1.74</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">33</td>
+                                            <td>Saint Lucia</td>
+                                            <td>LCA</td>
+                                            <td align="right ">10.4</td>
+                                            <td align="right ">10.1</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">29.7</td>
+                                            <td align="right ">12.6</td>
+                                            <td align="right ">56.1</td>
+                                            <td align="right ">1.5</td>
+                                            <td> $1,717 </td>
+                                            <td>16</td>
+                                            <td align="right ">2.81</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">34</td>
+                                            <td>Austria</td>
+                                            <td>AUT</td>
+                                            <td align="right ">10.3</td>
+                                            <td align="right ">9.7</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">50.4</td>
+                                            <td align="right ">35.5</td>
+                                            <td align="right ">14.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $416,845 </td>
+                                            <td>16</td>
+                                            <td align="right ">3.05</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">35</td>
+                                            <td>Estonia</td>
+                                            <td>EST</td>
+                                            <td align="right ">10.3</td>
+                                            <td align="right ">9.5</td>
+                                            <td align="right ">0.8</td>
+                                            <td align="right ">41.2</td>
+                                            <td align="right ">11.1</td>
+                                            <td align="right ">36.8</td>
+                                            <td align="right ">10.9</td>
+                                            <td> $25,973 </td>
+                                            <td>18</td>
+                                            <td align="right ">12.31</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">36</td>
+                                            <td>Greece</td>
+                                            <td>GRC</td>
+                                            <td align="right ">10.3</td>
+                                            <td align="right ">8.3</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">28.1</td>
+                                            <td align="right ">47.3</td>
+                                            <td align="right ">24.2</td>
+                                            <td align="right ">0.4</td>
+                                            <td> $200,690 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.22</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">37</td>
+                                            <td>Kazakhstan</td>
+                                            <td>KAZ</td>
+                                            <td align="right ">10.3</td>
+                                            <td align="right ">6.8</td>
+                                            <td align="right ">3.5</td>
+                                            <td align="right ">31.8</td>
+                                            <td align="right ">3.1</td>
+                                            <td align="right ">65.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $160,839 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.68</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">38</td>
+                                            <td>Canada</td>
+                                            <td>CAN</td>
+                                            <td align="right ">10.2</td>
+                                            <td align="right ">8.2</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">51.2</td>
+                                            <td align="right ">22.0</td>
+                                            <td align="right ">26.8</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $1,652,412 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.70</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">39</td>
+                                            <td>Nigeria</td>
+                                            <td>NGA</td>
+                                            <td align="right ">10.1</td>
+                                            <td align="right ">9.1</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">8.0</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">90.7</td>
+                                            <td> $376,284 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.29</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">40</td>
+                                            <td>Netherlands</td>
+                                            <td>NLD</td>
+                                            <td align="right ">9.9</td>
+                                            <td align="right ">9.4</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">46.8</td>
+                                            <td align="right ">36.4</td>
+                                            <td align="right ">16.9</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $825,745 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.07</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">41</td>
+                                            <td>Uganda</td>
+                                            <td>UGA</td>
+                                            <td align="right ">9.8</td>
+                                            <td align="right ">8.3</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">9.4</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">1.9</td>
+                                            <td align="right ">88.6</td>
+                                            <td> $26,349 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.62</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">42</td>
+                                            <td>Rwanda</td>
+                                            <td>RWA</td>
+                                            <td align="right ">9.8</td>
+                                            <td align="right ">6.8</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">11.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">88.4</td>
+                                            <td> $8,918 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.11</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">43</td>
+                                            <td>Chile</td>
+                                            <td>CHL</td>
+                                            <td align="right ">9.6</td>
+                                            <td align="right ">7.6</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">29.9</td>
+                                            <td align="right ">40.7</td>
+                                            <td align="right ">29.4</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $277,042 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.05</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">44</td>
+                                            <td>Argentina</td>
+                                            <td>ARG</td>
+                                            <td align="right ">9.3</td>
+                                            <td align="right ">8.3</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">40.7</td>
+                                            <td align="right ">48.0</td>
+                                            <td align="right ">5.5</td>
+                                            <td align="right ">5.8</td>
+                                            <td> $637,717 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.52</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">45</td>
+                                            <td>Burundi</td>
+                                            <td>BDI</td>
+                                            <td align="right ">9.3</td>
+                                            <td align="right ">6.3</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">24.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">75.4</td>
+                                            <td> $3,393 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.31</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">46</td>
+                                            <td>United States</td>
+                                            <td>USA</td>
+                                            <td align="right ">9.2</td>
+                                            <td align="right ">8.7</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">50.0</td>
+                                            <td align="right ">17.3</td>
+                                            <td align="right ">32.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $19,390,600 </td>
+                                            <td>21</td>
+                                            <td align="right ">2.26</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">47</td>
+                                            <td>Cyprus</td>
+                                            <td>CYP</td>
+                                            <td align="right ">9.2</td>
+                                            <td align="right ">8.2</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">40.9</td>
+                                            <td align="right ">24.7</td>
+                                            <td align="right ">33.7</td>
+                                            <td align="right ">0.7</td>
+                                            <td> $21,310 </td>
+                                            <td>17</td>
+                                            <td align="right ">0.45</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">48</td>
+                                            <td>Sweden</td>
+                                            <td>SWE</td>
+                                            <td align="right ">9.2</td>
+                                            <td align="right ">7.2</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">37.0</td>
+                                            <td align="right ">46.6</td>
+                                            <td align="right ">15.1</td>
+                                            <td align="right ">1.4</td>
+                                            <td> $538,575 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.45</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">49</td>
+                                            <td>Venezuela</td>
+                                            <td>VEN</td>
+                                            <td align="right ">8.9</td>
+                                            <td align="right ">7.7</td>
+                                            <td align="right ">1.3</td>
+                                            <td align="right ">75.6</td>
+                                            <td align="right ">0.8</td>
+                                            <td align="right ">23.4</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $210,085 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.33</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">50</td>
+                                            <td>Paraguay</td>
+                                            <td>PRY</td>
+                                            <td align="right ">8.8</td>
+                                            <td align="right ">7.3</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">51.1</td>
+                                            <td align="right ">18.2</td>
+                                            <td align="right ">28.8</td>
+                                            <td align="right ">2.0</td>
+                                            <td> $29,619 </td>
+                                            <td>20</td>
+                                            <td align="right ">3.23</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">51</td>
+                                            <td>Brazil</td>
+                                            <td>BRA</td>
+                                            <td align="right ">8.7</td>
+                                            <td align="right ">7.2</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">59.6</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">36.3</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $2,054,969 </td>
+                                            <td>18</td>
+                                            <td align="right ">4.03</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">52</td>
+                                            <td>Sierra Leone</td>
+                                            <td>SLE</td>
+                                            <td align="right ">8.7</td>
+                                            <td align="right ">6.7</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">6.4</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">92.3</td>
+                                            <td> $3,897 </td>
+                                            <td>0</td>
+                                            <td align="right ">3.45</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">53</td>
+                                            <td>Montenegro</td>
+                                            <td>MNE</td>
+                                            <td align="right ">8.7</td>
+                                            <td align="right ">4.9</td>
+                                            <td align="right ">3.9</td>
+                                            <td align="right ">10.9</td>
+                                            <td align="right ">47.0</td>
+                                            <td align="right ">41.7</td>
+                                            <td align="right ">0.4</td>
+                                            <td> $4,405 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.05</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">54</td>
+                                            <td>Belize</td>
+                                            <td>BLZ</td>
+                                            <td align="right ">8.5</td>
+                                            <td align="right ">6.8</td>
+                                            <td align="right ">1.7</td>
+                                            <td align="right ">67.6</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">30.3</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $1,819 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.93</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">55</td>
+                                            <td>Cameroon</td>
+                                            <td>CMR</td>
+                                            <td align="right ">8.4</td>
+                                            <td align="right ">5.8</td>
+                                            <td align="right ">2.6</td>
+                                            <td align="right ">63.9</td>
+                                            <td align="right ">22.1</td>
+                                            <td align="right ">13.8</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $34,006 </td>
+                                            <td>0</td>
+                                            <td align="right ">2.64</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">56</td>
+                                            <td>Botswana</td>
+                                            <td>BWA</td>
+                                            <td align="right ">8.4</td>
+                                            <td align="right ">5.4</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">56.0</td>
+                                            <td align="right ">11.8</td>
+                                            <td align="right ">11.5</td>
+                                            <td align="right ">20.7</td>
+                                            <td> $16,725 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.47</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">57</td>
+                                            <td>Guyana</td>
+                                            <td>GUY</td>
+                                            <td align="right ">8.1</td>
+                                            <td align="right ">7.1</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">23.0</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">76.6</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $3,591 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.05</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">58</td>
+                                            <td>Peru</td>
+                                            <td>PER</td>
+                                            <td align="right ">8.1</td>
+                                            <td align="right ">6.1</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">46.8</td>
+                                            <td align="right ">6.1</td>
+                                            <td align="right ">47.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $215,224 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.41</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">59</td>
+                                            <td>Panama</td>
+                                            <td>PAN</td>
+                                            <td align="right ">8.0</td>
+                                            <td align="right ">7.2</td>
+                                            <td align="right ">0.8</td>
+                                            <td align="right ">69.2</td>
+                                            <td align="right ">4.6</td>
+                                            <td align="right ">26.0</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $61,838 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.76</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">60</td>
+                                            <td>Norway</td>
+                                            <td>NOR</td>
+                                            <td align="right ">7.7</td>
+                                            <td align="right ">6.7</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">44.2</td>
+                                            <td align="right ">34.7</td>
+                                            <td align="right ">19.0</td>
+                                            <td align="right ">2.1</td>
+                                            <td> $396,457 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.36</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">61</td>
+                                            <td>Tanzania</td>
+                                            <td>TZA</td>
+                                            <td align="right ">7.7</td>
+                                            <td align="right ">5.7</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">11.0</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">87.0</td>
+                                            <td> $51,725 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.74</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">62</td>
+                                            <td>Georgia</td>
+                                            <td>GEO</td>
+                                            <td align="right ">7.7</td>
+                                            <td align="right ">5.4</td>
+                                            <td align="right ">2.3</td>
+                                            <td align="right ">17.0</td>
+                                            <td align="right ">49.8</td>
+                                            <td align="right ">33.2</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $15,230 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.56</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">63</td>
+                                            <td>Uruguay</td>
+                                            <td>URY</td>
+                                            <td align="right ">7.6</td>
+                                            <td align="right ">6.6</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">30.6</td>
+                                            <td align="right ">59.9</td>
+                                            <td align="right ">9.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $58,415 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.47</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">64</td>
+                                            <td>Angola</td>
+                                            <td>AGO</td>
+                                            <td align="right ">7.5</td>
+                                            <td align="right ">5.9</td>
+                                            <td align="right ">1.6</td>
+                                            <td align="right ">64.3</td>
+                                            <td align="right ">13.7</td>
+                                            <td align="right ">17.4</td>
+                                            <td align="right ">4.7</td>
+                                            <td> $124,209 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.58</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">65</td>
+                                            <td>Laos</td>
+                                            <td>LAO</td>
+                                            <td align="right ">7.3</td>
+                                            <td align="right ">6.2</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">35.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">64.4</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $17,152 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.69</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">66</td>
+                                            <td>Japan</td>
+                                            <td>JPN</td>
+                                            <td align="right ">7.2</td>
+                                            <td align="right ">7.0</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">19.2</td>
+                                            <td align="right ">4.1</td>
+                                            <td align="right ">52.0</td>
+                                            <td align="right ">24.7</td>
+                                            <td> $4,872,135 </td>
+                                            <td>20</td>
+                                            <td align="right ">0.25</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">67</td>
+                                            <td>Mexico</td>
+                                            <td>MEX</td>
+                                            <td align="right ">7.2</td>
+                                            <td align="right ">5.5</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">75.7</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">22.2</td>
+                                            <td align="right ">0.5</td>
+                                            <td> $1,149,236 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.04</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">68</td>
+                                            <td>Ecuador</td>
+                                            <td>ECU</td>
+                                            <td align="right ">7.2</td>
+                                            <td align="right ">4.2</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">67.3</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">31.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $102,311 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.95</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">69</td>
+                                            <td>Iceland</td>
+                                            <td>ISL</td>
+                                            <td align="right ">7.1</td>
+                                            <td align="right ">6.6</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">61.8</td>
+                                            <td align="right ">21.2</td>
+                                            <td align="right ">16.5</td>
+                                            <td align="right ">0.5</td>
+                                            <td> $23,909 </td>
+                                            <td>20</td>
+                                            <td align="right ">1.37</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">70</td>
+                                            <td>Thailand</td>
+                                            <td>THA</td>
+                                            <td align="right ">7.1</td>
+                                            <td align="right ">6.4</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">27.0</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">72.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $455,378 </td>
+                                            <td>20</td>
+                                            <td align="right ">2.83</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">71</td>
+                                            <td>Bosnia and Herzegovina</td>
+                                            <td>BIH</td>
+                                            <td align="right ">7.1</td>
+                                            <td align="right ">4.6</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">73.3</td>
+                                            <td align="right ">9.7</td>
+                                            <td align="right ">17.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $17,457 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.37</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">72</td>
+                                            <td>Sao Tome and Principe</td>
+                                            <td>STP</td>
+                                            <td align="right ">7.1</td>
+                                            <td align="right ">4.2</td>
+                                            <td align="right ">2.9</td>
+                                            <td align="right ">23.5</td>
+                                            <td align="right ">60.2</td>
+                                            <td align="right ">16.3</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $372 </td>
+                                            <td>None</td>
+                                            <td align="right ">1.04</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">73</td>
+                                            <td>Malta</td>
+                                            <td>MLT</td>
+                                            <td align="right ">7.0</td>
+                                            <td align="right ">6.6</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">39.4</td>
+                                            <td align="right ">32.7</td>
+                                            <td align="right ">27.2</td>
+                                            <td align="right ">0.7</td>
+                                            <td> $12,011 </td>
+                                            <td>17</td>
+                                            <td align="right ">0.36</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">74</td>
+                                            <td>Albania</td>
+                                            <td>ALB</td>
+                                            <td align="right ">7.0</td>
+                                            <td align="right ">4.9</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">31.8</td>
+                                            <td align="right ">19.8</td>
+                                            <td align="right ">48.4</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $13,001 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">75</td>
+                                            <td>Bahamas</td>
+                                            <td>BHS</td>
+                                            <td align="right ">6.9</td>
+                                            <td align="right ">6.3</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">34.0</td>
+                                            <td align="right ">14.6</td>
+                                            <td align="right ">50.4</td>
+                                            <td align="right ">1.0</td>
+                                            <td> $9,127 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.24</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">76</td>
+                                            <td>Dominican Republic</td>
+                                            <td>DOM</td>
+                                            <td align="right ">6.9</td>
+                                            <td align="right ">6.2</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">54.5</td>
+                                            <td align="right ">2.7</td>
+                                            <td align="right ">42.7</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $75,018 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.29</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">77</td>
+                                            <td>Mongolia</td>
+                                            <td>MNG</td>
+                                            <td align="right ">6.9</td>
+                                            <td align="right ">4.9</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">27.6</td>
+                                            <td align="right ">2.8</td>
+                                            <td align="right ">69.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $10,869 </td>
+                                            <td>21</td>
+                                            <td align="right ">7.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">78</td>
+                                            <td>Cape Verde</td>
+                                            <td>CPV</td>
+                                            <td align="right ">6.9</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">2.9</td>
+                                            <td align="right ">44.4</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">54.2</td>
+                                            <td> $1,728 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">79</td>
+                                            <td>Barbados</td>
+                                            <td>BRB</td>
+                                            <td align="right ">6.8</td>
+                                            <td align="right ">6.3</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">39.7</td>
+                                            <td align="right ">10.2</td>
+                                            <td align="right ">49.3</td>
+                                            <td align="right ">0.8</td>
+                                            <td> $4,821 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.03</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">80</td>
+                                            <td>Burkina Faso</td>
+                                            <td>BFA</td>
+                                            <td align="right ">6.8</td>
+                                            <td align="right ">4.3</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">10.0</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">3.1</td>
+                                            <td align="right ">83.8</td>
+                                            <td> $13,187 </td>
+                                            <td>0</td>
+                                            <td align="right ">2.56</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">81</td>
+                                            <td>Italy</td>
+                                            <td>ITA</td>
+                                            <td align="right ">6.7</td>
+                                            <td align="right ">6.5</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">23.0</td>
+                                            <td align="right ">65.6</td>
+                                            <td align="right ">11.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $1,937,894 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.38</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">82</td>
+                                            <td>Trinidad and Tobago</td>
+                                            <td>TTO</td>
+                                            <td align="right ">6.7</td>
+                                            <td align="right ">6.4</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">54.0</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">43.8</td>
+                                            <td align="right ">0.3</td>
+                                            <td> $20,300 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.39</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">83</td>
+                                            <td>China</td>
+                                            <td>CHN</td>
+                                            <td align="right ">6.7</td>
+                                            <td align="right ">5.0</td>
+                                            <td align="right ">1.7</td>
+                                            <td align="right ">27.8</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">69.2</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $12,014,610 </td>
+                                            <td>0</td>
+                                            <td align="right ">0.75</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">84</td>
+                                            <td>Lebanon</td>
+                                            <td>LBN</td>
+                                            <td align="right ">6.7</td>
+                                            <td align="right ">3.9</td>
+                                            <td align="right ">2.8</td>
+                                            <td align="right ">47.4</td>
+                                            <td align="right ">39.9</td>
+                                            <td align="right ">12.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $51,457 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.29</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">85</td>
+                                            <td>Saint Vincent and the Grenadines</td>
+                                            <td>VCT</td>
+                                            <td align="right ">6.6</td>
+                                            <td align="right ">6.3</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">33.4</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">63.1</td>
+                                            <td align="right ">0.5</td>
+                                            <td> $815 </td>
+                                            <td>16</td>
+                                            <td align="right ">5.80</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">86</td>
+                                            <td>Equatorial Guinea</td>
+                                            <td>GNQ</td>
+                                            <td align="right ">6.6</td>
+                                            <td align="right ">5.8</td>
+                                            <td align="right ">0.8</td>
+                                            <td align="right ">27.8</td>
+                                            <td align="right ">72.2</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $10,069 </td>
+                                            <td>21</td>
+                                            <td align="right ">2.60</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">87</td>
+                                            <td>Suriname</td>
+                                            <td>SUR</td>
+                                            <td align="right ">6.6</td>
+                                            <td align="right ">5.6</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">40.0</td>
+                                            <td align="right ">2.3</td>
+                                            <td align="right ">57.2</td>
+                                            <td align="right ">0.5</td>
+                                            <td> $3,665 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.97</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">88</td>
+                                            <td>Vietnam</td>
+                                            <td>VNM</td>
+                                            <td align="right ">6.6</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">4.6</td>
+                                            <td align="right ">97.3</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $220,408 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.96</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">89</td>
+                                            <td>Lesotho</td>
+                                            <td>LSO</td>
+                                            <td align="right ">6.5</td>
+                                            <td align="right ">2.8</td>
+                                            <td align="right ">3.7</td>
+                                            <td align="right ">51.3</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">18.9</td>
+                                            <td align="right ">29.6</td>
+                                            <td> $2,721 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.54</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">90</td>
+                                            <td>Haiti</td>
+                                            <td>HTI</td>
+                                            <td align="right ">6.4</td>
+                                            <td align="right ">5.9</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">99.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $8,360 </td>
+                                            <td>16</td>
+                                            <td align="right ">4.36</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">91</td>
+                                            <td>Colombia</td>
+                                            <td>COL</td>
+                                            <td align="right ">6.2</td>
+                                            <td align="right ">4.2</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">66.1</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">32.5</td>
+                                            <td align="right ">0.3</td>
+                                            <td> $309,197 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.30</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">92</td>
+                                            <td>Ivory Coast</td>
+                                            <td>CIV</td>
+                                            <td align="right ">6.0</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">16.1</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">80.5</td>
+                                            <td> $40,360 </td>
+                                            <td>21</td>
+                                            <td align="right ">4.01</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">93</td>
+                                            <td>Bolivia</td>
+                                            <td>BOL</td>
+                                            <td align="right ">5.9</td>
+                                            <td align="right ">3.8</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">76.8</td>
+                                            <td align="right ">3.8</td>
+                                            <td align="right ">19.3</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $37,122 </td>
+                                            <td>0</td>
+                                            <td align="right ">4.35</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">94</td>
+                                            <td>Swaziland</td>
+                                            <td>SWZ</td>
+                                            <td align="right ">5.7</td>
+                                            <td align="right ">4.7</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">33.6</td>
+                                            <td align="right ">0.8</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">65.0</td>
+                                            <td> $4,030 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.93</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">95</td>
+                                            <td>Zimbabwe</td>
+                                            <td>ZWE</td>
+                                            <td align="right ">5.7</td>
+                                            <td align="right ">4.7</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">23.7</td>
+                                            <td align="right ">1.7</td>
+                                            <td align="right ">6.8</td>
+                                            <td align="right ">67.7</td>
+                                            <td> $17,105 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.73</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">96</td>
+                                            <td>Seychelles</td>
+                                            <td>SYC</td>
+                                            <td align="right ">5.6</td>
+                                            <td align="right ">4.1</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">67.0</td>
+                                            <td align="right ">22.2</td>
+                                            <td align="right ">10.8</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $1,479 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.21</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">97</td>
+                                            <td>Cambodia</td>
+                                            <td>KHM</td>
+                                            <td align="right ">5.5</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">3.3</td>
+                                            <td align="right ">45.7</td>
+                                            <td align="right ">0.8</td>
+                                            <td align="right ">53.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $22,252 </td>
+                                            <td>0</td>
+                                            <td align="right ">2.44</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">98</td>
+                                            <td>Philippines</td>
+                                            <td>PHL</td>
+                                            <td align="right ">5.4</td>
+                                            <td align="right ">4.6</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">26.9</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">72.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $313,419 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.88</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">99</td>
+                                            <td>Costa Rica</td>
+                                            <td>CRI</td>
+                                            <td align="right ">5.4</td>
+                                            <td align="right ">4.4</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">59.3</td>
+                                            <td align="right ">4.7</td>
+                                            <td align="right ">35.5</td>
+                                            <td align="right ">0.5</td>
+                                            <td> $58,056 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.97</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">100</td>
+                                            <td>Armenia</td>
+                                            <td>ARM</td>
+                                            <td align="right ">5.3</td>
+                                            <td align="right ">3.8</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">9.7</td>
+                                            <td align="right ">5.3</td>
+                                            <td align="right ">84.9</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $11,037 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.76</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">101</td>
+                                            <td>Cuba</td>
+                                            <td>CUB</td>
+                                            <td align="right ">5.2</td>
+                                            <td align="right ">4.2</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">38.8</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">58.9</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $80,713 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.95</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">102</td>
+                                            <td>Nicaragua</td>
+                                            <td>NIC</td>
+                                            <td align="right ">5.0</td>
+                                            <td align="right ">3.5</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">38.8</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">60.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $13,692 </td>
+                                            <td>18</td>
+                                            <td align="right ">8.70</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">103</td>
+                                            <td>Jamaica</td>
+                                            <td>JAM</td>
+                                            <td align="right ">4.9</td>
+                                            <td align="right ">3.4</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">42.0</td>
+                                            <td align="right ">4.9</td>
+                                            <td align="right ">51.4</td>
+                                            <td align="right ">1.6</td>
+                                            <td> $14,290 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.31</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">104</td>
+                                            <td>Ghana</td>
+                                            <td>GHA</td>
+                                            <td align="right ">4.8</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">30.0</td>
+                                            <td align="right ">9.7</td>
+                                            <td align="right ">2.9</td>
+                                            <td align="right ">57.3</td>
+                                            <td> $47,032 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.99</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">105</td>
+                                            <td>Liberia</td>
+                                            <td>LBR</td>
+                                            <td align="right ">4.7</td>
+                                            <td align="right ">3.1</td>
+                                            <td align="right ">1.6</td>
+                                            <td align="right ">10.8</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">88.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $2,140 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.70</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">106</td>
+                                            <td>Uzbekistan</td>
+                                            <td>UZB</td>
+                                            <td align="right ">4.6</td>
+                                            <td align="right ">2.4</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">18.3</td>
+                                            <td align="right ">6.3</td>
+                                            <td align="right ">75.4</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $47,883 </td>
+                                            <td>20</td>
+                                            <td align="right ">1.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">107</td>
+                                            <td>Chad</td>
+                                            <td>TCD</td>
+                                            <td align="right ">4.4</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">66.3</td>
+                                            <td align="right ">3.4</td>
+                                            <td align="right ">3.8</td>
+                                            <td align="right ">26.5</td>
+                                            <td> $9,740 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.06</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">108</td>
+                                            <td>United Arab Emirates</td>
+                                            <td>ARE</td>
+                                            <td align="right ">4.3</td>
+                                            <td align="right ">2.8</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">10.3</td>
+                                            <td align="right ">2.9</td>
+                                            <td align="right ">86.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $377,435 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.42</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">109</td>
+                                            <td>Kyrgyzstan</td>
+                                            <td>KGZ</td>
+                                            <td align="right ">4.3</td>
+                                            <td align="right ">2.4</td>
+                                            <td align="right ">1.9</td>
+                                            <td align="right ">22.6</td>
+                                            <td align="right ">4.2</td>
+                                            <td align="right ">72.9</td>
+                                            <td align="right ">0.3</td>
+                                            <td> $7,061 </td>
+                                            <td>18</td>
+                                            <td align="right ">5.75</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">110</td>
+                                            <td>India</td>
+                                            <td>IND</td>
+                                            <td align="right ">4.3</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">6.8</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">93.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $2,611,012 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.70</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">111</td>
+                                            <td>Turkmenistan</td>
+                                            <td>TKM</td>
+                                            <td align="right ">4.3</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">15.4</td>
+                                            <td align="right ">26.1</td>
+                                            <td align="right ">58.4</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $37,926 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.85</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">112</td>
+                                            <td>Kenya</td>
+                                            <td>KEN</td>
+                                            <td align="right ">4.3</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">56.1</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">21.6</td>
+                                            <td align="right ">20.4</td>
+                                            <td> $79,511 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.41</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">113</td>
+                                            <td>Ethiopia</td>
+                                            <td>ETH</td>
+                                            <td align="right ">4.2</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">3.5</td>
+                                            <td align="right ">49.7</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">8.2</td>
+                                            <td align="right ">41.4</td>
+                                            <td> $80,874 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.66</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">114</td>
+                                            <td>Honduras</td>
+                                            <td>HND</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">40.1</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">58.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $22,975 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.91</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">115</td>
+                                            <td>Guinea-Bissau</td>
+                                            <td>GNB</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">19.6</td>
+                                            <td align="right ">14.9</td>
+                                            <td align="right ">22.4</td>
+                                            <td align="right ">43.0</td>
+                                            <td> $1,295 </td>
+                                            <td>0</td>
+                                            <td align="right ">1.90</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">116</td>
+                                            <td>Zambia</td>
+                                            <td>ZMB</td>
+                                            <td align="right ">4.0</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">22.7</td>
+                                            <td align="right ">2.9</td>
+                                            <td align="right ">13.6</td>
+                                            <td align="right ">60.7</td>
+                                            <td> $25,504 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.48</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">117</td>
+                                            <td>Republic of the Congo</td>
+                                            <td>COG</td>
+                                            <td align="right ">3.9</td>
+                                            <td align="right ">1.7</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">78.4</td>
+                                            <td align="right ">9.8</td>
+                                            <td align="right ">10.9</td>
+                                            <td align="right ">0.8</td>
+                                            <td> $7,834 </td>
+                                            <td>16</td>
+                                            <td align="right ">1.24</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">118</td>
+                                            <td>Guatemala</td>
+                                            <td>GTM</td>
+                                            <td align="right ">3.8</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">1.6</td>
+                                            <td align="right ">41.9</td>
+                                            <td align="right ">1.6</td>
+                                            <td align="right ">56.3</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $75,661 </td>
+                                            <td>18</td>
+                                            <td align="right ">10.60</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">119</td>
+                                            <td>Central African Republic</td>
+                                            <td>CAF</td>
+                                            <td align="right ">3.8</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">16.2</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">81.1</td>
+                                            <td> $1,992 </td>
+                                            <td>21</td>
+                                            <td align="right ">2.39</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">120</td>
+                                            <td>North Korea</td>
+                                            <td>PRK</td>
+                                            <td align="right ">3.7</td>
+                                            <td align="right ">3.2</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">5.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">94.9</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $12,380 </td>
+                                            <td>None</td>
+                                            <td align="right ">1.11</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">121</td>
+                                            <td>Sri Lanka</td>
+                                            <td>LKA</td>
+                                            <td align="right ">3.7</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">13.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">85.2</td>
+                                            <td align="right ">1.7</td>
+                                            <td> $87,591 </td>
+                                            <td>21</td>
+                                            <td align="right ">1.40</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">122</td>
+                                            <td>Mauritius</td>
+                                            <td>MUS</td>
+                                            <td align="right ">3.6</td>
+                                            <td align="right ">2.6</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">66.2</td>
+                                            <td align="right ">12.3</td>
+                                            <td align="right ">21.3</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $12,273 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.86</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">123</td>
+                                            <td>Samoa</td>
+                                            <td>WSM</td>
+                                            <td align="right ">3.6</td>
+                                            <td align="right ">2.6</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">70.9</td>
+                                            <td align="right ">16.6</td>
+                                            <td align="right ">12.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $844 </td>
+                                            <td>21</td>
+                                            <td align="right ">0.47</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">124</td>
+                                            <td>Democratic Republic of the Congo</td>
+                                            <td>COD</td>
+                                            <td align="right ">3.6</td>
+                                            <td align="right ">2.3</td>
+                                            <td align="right ">1.3</td>
+                                            <td align="right ">24.0</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">73.3</td>
+                                            <td> $41,441 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.33</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">125</td>
+                                            <td>Gambia</td>
+                                            <td>GMB</td>
+                                            <td align="right ">3.4</td>
+                                            <td align="right ">2.4</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">5.6</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">93.5</td>
+                                            <td> $1,038 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.18</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">126</td>
+                                            <td>El Salvador</td>
+                                            <td>SLV</td>
+                                            <td align="right ">3.2</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">41.7</td>
+                                            <td align="right ">1.7</td>
+                                            <td align="right ">56.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $28,023 </td>
+                                            <td>18</td>
+                                            <td align="right ">17.56</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">127</td>
+                                            <td>Fiji</td>
+                                            <td>FJI</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">67.7</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">31.1</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $5,054 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.15</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">128</td>
+                                            <td>Papua New Guinea</td>
+                                            <td>PNG</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">51.3</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">47.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $23,617 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.84</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">129</td>
+                                            <td>Kiribati</td>
+                                            <td>KIR</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">36.9</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">60.9</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $186 </td>
+                                            <td>21</td>
+                                            <td align="right ">0.40</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">130</td>
+                                            <td>Tajikistan</td>
+                                            <td>TJK</td>
+                                            <td align="right ">2.8</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">10.2</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">88.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $7,234 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.97</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">131</td>
+                                            <td>Israel</td>
+                                            <td>ISR</td>
+                                            <td align="right ">2.8</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">44.0</td>
+                                            <td align="right ">6.2</td>
+                                            <td align="right ">49.5</td>
+                                            <td align="right ">0.3</td>
+                                            <td> $350,609 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.56</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">132</td>
+                                            <td>Sudan</td>
+                                            <td>SDN</td>
+                                            <td align="right ">2.7</td>
+                                            <td align="right ">1.7</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">8.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">13.5</td>
+                                            <td align="right ">78.5</td>
+                                            <td> $58,239 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.73</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">133</td>
+                                            <td>Malawi</td>
+                                            <td>MWI</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">9.1</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">13.4</td>
+                                            <td align="right ">76.2</td>
+                                            <td> $6,261 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.32</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">134</td>
+                                            <td>Macedonia</td>
+                                            <td>MKD</td>
+                                            <td align="right ">2.4</td>
+                                            <td align="right ">1.9</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">18.2</td>
+                                            <td align="right ">29.1</td>
+                                            <td align="right ">52.4</td>
+                                            <td align="right ">0.3</td>
+                                            <td> $11,416 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.69</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">135</td>
+                                            <td>Azerbaijan</td>
+                                            <td>AZE</td>
+                                            <td align="right ">2.3</td>
+                                            <td align="right ">1.3</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">28.7</td>
+                                            <td align="right ">7.6</td>
+                                            <td align="right ">63.3</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $40,670 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.32</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">136</td>
+                                            <td>Mozambique</td>
+                                            <td>MOZ</td>
+                                            <td align="right ">2.3</td>
+                                            <td align="right ">1.3</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">63.0</td>
+                                            <td align="right ">7.3</td>
+                                            <td align="right ">25.4</td>
+                                            <td align="right ">4.3</td>
+                                            <td> $12,345 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.43</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">137</td>
+                                            <td>Togo</td>
+                                            <td>TGO</td>
+                                            <td align="right ">2.3</td>
+                                            <td align="right ">1.3</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">48.9</td>
+                                            <td align="right ">26.9</td>
+                                            <td align="right ">2.4</td>
+                                            <td align="right ">21.8</td>
+                                            <td> $4,797 </td>
+                                            <td>0</td>
+                                            <td align="right ">2.29</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">138</td>
+                                            <td>Nepal</td>
+                                            <td>NPL</td>
+                                            <td align="right ">2.2</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">47.7</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">51.4</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $24,472 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.46</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">139</td>
+                                            <td>Bahrain</td>
+                                            <td>BHR</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">36.6</td>
+                                            <td align="right ">6.3</td>
+                                            <td align="right ">57.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $34,895 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.85</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">140</td>
+                                            <td>Benin</td>
+                                            <td>BEN</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">54.6</td>
+                                            <td align="right ">21.7</td>
+                                            <td align="right ">7.2</td>
+                                            <td align="right ">16.5</td>
+                                            <td> $9,410 </td>
+                                            <td>0</td>
+                                            <td align="right ">2.29</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">141</td>
+                                            <td>Singapore</td>
+                                            <td>SGP</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">70.1</td>
+                                            <td align="right ">13.5</td>
+                                            <td align="right ">14.7</td>
+                                            <td align="right ">1.7</td>
+                                            <td> $323,902 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.17</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">142</td>
+                                            <td>Turkey</td>
+                                            <td>TUR</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">1.4</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">63.6</td>
+                                            <td align="right ">8.6</td>
+                                            <td align="right ">27.9</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $849,480 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">143</td>
+                                            <td>Madagascar</td>
+                                            <td>MDG</td>
+                                            <td align="right ">1.8</td>
+                                            <td align="right ">0.8</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">56.0</td>
+                                            <td align="right ">9.5</td>
+                                            <td align="right ">34.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $10,557 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.99</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">144</td>
+                                            <td>Solomon Islands</td>
+                                            <td>SLB</td>
+                                            <td align="right ">1.7</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">81.1</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">16.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $1,273 </td>
+                                            <td>0</td>
+                                            <td align="right ">0.62</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">145</td>
+                                            <td>Tonga</td>
+                                            <td>TON</td>
+                                            <td align="right ">1.6</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">57.9</td>
+                                            <td align="right ">7.6</td>
+                                            <td align="right ">34.3</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $437 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.51</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">146</td>
+                                            <td>Tunisia</td>
+                                            <td>TUN</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">1.3</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">68.6</td>
+                                            <td align="right ">27.7</td>
+                                            <td align="right ">3.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $40,275 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.05</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">147</td>
+                                            <td>Qatar</td>
+                                            <td>QAT</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">13.9</td>
+                                            <td align="right ">84.6</td>
+                                            <td align="right ">0.3</td>
+                                            <td> $166,326 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.32</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">148</td>
+                                            <td>Vanuatu</td>
+                                            <td>VUT</td>
+                                            <td align="right ">1.4</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">40.5</td>
+                                            <td align="right ">22.8</td>
+                                            <td align="right ">36.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $837 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.48</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">149</td>
+                                            <td>Djibouti</td>
+                                            <td>DJI</td>
+                                            <td align="right ">1.3</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">23.2</td>
+                                            <td align="right ">5.3</td>
+                                            <td align="right ">71.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $2,082 </td>
+                                            <td>None</td>
+                                            <td align="right ">1.70</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">150</td>
+                                            <td>Malaysia</td>
+                                            <td>MYS</td>
+                                            <td align="right ">1.3</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">76.2</td>
+                                            <td align="right ">2.0</td>
+                                            <td align="right ">21.8</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $314,497 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.24</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">151</td>
+                                            <td>Syria</td>
+                                            <td>SYR</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">8.5</td>
+                                            <td align="right ">27.9</td>
+                                            <td align="right ">63.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $77,460 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">152</td>
+                                            <td>Maldives</td>
+                                            <td>MDV</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">29.1</td>
+                                            <td align="right ">29.4</td>
+                                            <td align="right ">41.2</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $4,520 </td>
+                                            <td>None</td>
+                                            <td align="right ">3.88</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">153</td>
+                                            <td>Mali</td>
+                                            <td>MLI</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">13.3</td>
+                                            <td align="right ">1.5</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">83.1</td>
+                                            <td> $14,998 </td>
+                                            <td>0</td>
+                                            <td align="right ">2.15</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">154</td>
+                                            <td>Eritrea</td>
+                                            <td>ERI</td>
+                                            <td align="right ">1.1</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">63.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">36.3</td>
+                                            <td> $6,050 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.93</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">155</td>
+                                            <td>Algeria</td>
+                                            <td>DZA</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">62.6</td>
+                                            <td align="right ">35.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">2.0</td>
+                                            <td> $178,287 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.20</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">156</td>
+                                            <td>Iran</td>
+                                            <td>IRN</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">24.8</td>
+                                            <td align="right ">52.1</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">1.0</td>
+                                            <td> $431,920 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.11</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">157</td>
+                                            <td>Oman</td>
+                                            <td>OMN</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">54.6</td>
+                                            <td align="right ">3.3</td>
+                                            <td align="right ">42.2</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $74,274 </td>
+                                            <td>21</td>
+                                            <td align="right ">0.33</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">158</td>
+                                            <td>Brunei</td>
+                                            <td>BRN</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">89.8</td>
+                                            <td align="right ">2.3</td>
+                                            <td align="right ">7.2</td>
+                                            <td align="right ">0.7</td>
+                                            <td> $11,963 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.17</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">159</td>
+                                            <td>Morocco</td>
+                                            <td>MAR</td>
+                                            <td align="right ">0.9</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">43.5</td>
+                                            <td align="right ">36.5</td>
+                                            <td align="right ">19.9</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $109,824 </td>
+                                            <td>16</td>
+                                            <td align="right ">0.85</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">160</td>
+                                            <td>Jordan</td>
+                                            <td>JOR</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">22.4</td>
+                                            <td align="right ">2.1</td>
+                                            <td align="right ">75.4</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $40,487 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.28</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">161</td>
+                                            <td>Bhutan</td>
+                                            <td>BTN</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">100.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $2,321 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.67</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">162</td>
+                                            <td>Guinea</td>
+                                            <td>GIN</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">78.9</td>
+                                            <td align="right ">16.3</td>
+                                            <td align="right ">3.7</td>
+                                            <td align="right ">1.1</td>
+                                            <td> $9,183 </td>
+                                            <td>18</td>
+                                            <td align="right ">2.26</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">163</td>
+                                            <td>Myanmar</td>
+                                            <td>MMR</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">82.6</td>
+                                            <td align="right ">5.7</td>
+                                            <td align="right ">11.8</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $66,537 </td>
+                                            <td>18</td>
+                                            <td align="right ">3.36</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">164</td>
+                                            <td>Afghanistan</td>
+                                            <td>AFG</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.7</td>
+                                            <td align="right ">18.9</td>
+                                            <td align="right ">38.3</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">1.2</td>
+                                            <td> $20,889 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.83</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">165</td>
+                                            <td>Senegal</td>
+                                            <td>SEN</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">55.1</td>
+                                            <td align="right ">41.3</td>
+                                            <td align="right ">3.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $16,057 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.82</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">166</td>
+                                            <td>Indonesia</td>
+                                            <td>IDN</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">84.5</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">15.3</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $1,015,411 </td>
+                                            <td>0</td>
+                                            <td align="right ">0.53</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">167</td>
+                                            <td>Timor-Leste</td>
+                                            <td>TLS</td>
+                                            <td align="right ">0.6</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">9.3</td>
+                                            <td align="right ">75.9</td>
+                                            <td align="right ">14.8</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $2,716 </td>
+                                            <td>0</td>
+                                            <td align="right ">1.75</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">168</td>
+                                            <td>Iraq</td>
+                                            <td>IRQ</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">76.1</td>
+                                            <td align="right ">1.0</td>
+                                            <td align="right ">22.9</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $197,699 </td>
+                                            <td>21</td>
+                                            <td align="right ">0.31</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">169</td>
+                                            <td>Somalia</td>
+                                            <td>SOM</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">9.2</td>
+                                            <td align="right ">19.2</td>
+                                            <td align="right ">0.5</td>
+                                            <td align="right ">0.5</td>
+                                            <td> $6,217 </td>
+                                            <td>None</td>
+                                            <td align="right ">1.92</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">170</td>
+                                            <td>Egypt</td>
+                                            <td>EGY</td>
+                                            <td align="right ">0.4</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">53.8</td>
+                                            <td align="right ">5.4</td>
+                                            <td align="right ">40.3</td>
+                                            <td align="right ">0.5</td>
+                                            <td> $237,073 </td>
+                                            <td>18</td>
+                                            <td align="right ">0.20</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">171</td>
+                                            <td>Niger</td>
+                                            <td>NER</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">46.0</td>
+                                            <td align="right ">13.2</td>
+                                            <td align="right ">40.7</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $7,892 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.80</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">172</td>
+                                            <td>Yemen</td>
+                                            <td>YEM</td>
+                                            <td align="right ">0.3</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">100.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $16,511 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.73</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">173</td>
+                                            <td>Comoros</td>
+                                            <td>COM</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">23.3</td>
+                                            <td align="right ">22.2</td>
+                                            <td align="right ">54.6</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $659 </td>
+                                            <td>18</td>
+                                            <td align="right ">1.83</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">174</td>
+                                            <td>Saudi Arabia</td>
+                                            <td>SAU</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">1.9</td>
+                                            <td align="right ">97.9</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $683,827 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.39</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">175</td>
+                                            <td>Bangladesh</td>
+                                            <td>BGD</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">9.0</td>
+                                            <td align="right ">17.6</td>
+                                            <td align="right ">0.2</td>
+                                            <td align="right ">0.2</td>
+                                            <td> $261,374 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.45</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">176</td>
+                                            <td>Kuwait</td>
+                                            <td>KWT</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">58.1</td>
+                                            <td align="right ">10.8</td>
+                                            <td align="right ">30.7</td>
+                                            <td align="right ">0.4</td>
+                                            <td> $120,351 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.25</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">177</td>
+                                            <td>Libya</td>
+                                            <td>LBY</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">2.5</td>
+                                            <td align="right ">5.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $31,331 </td>
+                                            <td>None</td>
+                                            <td align="right ">0.48</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">178</td>
+                                            <td>Mauritania</td>
+                                            <td>MRT</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td> $4,985 </td>
+                                            <td>None</td>
+                                            <td align="right ">1.69</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right ">179</td>
+                                            <td>Pakistan</td>
+                                            <td>PAK</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">0.0</td>
+                                            <td align="right ">1.2</td>
+                                            <td align="right ">3.0</td>
+                                            <td align="right ">0.1</td>
+                                            <td align="right ">0.1</td>
+                                            <td> $303,993 </td>
+                                            <td>21</td>
+                                            <td align="right ">0.38</td>
+                                        </tr>
+                                    </tbody>
+                                    <!-- <script>
+                                        function sortTable(n) {
+                                            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+                                            table = document.getElementById("myTable2 ");
+                                            switching = true;
+                                            // Set the sorting direction to ascending:
+                                            dir = "asc ";
+                                            /* Make a loop that will continue until
+                                            no switching has been done: */
+                                            while (switching) {
+                                                // Start by saying: no switching is done:
+                                                switching = false;
+                                                rows = table.rows;
+                                                /* Loop through all table rows (except the
+                                                first, which contains table headers): */
+                                                for (i = 1; i < (rows.length - 1); i++) {
+                                                    // Start by saying there should be no switching:
+                                                    shouldSwitch = false;
+                                                    /* Get the two elements you want to compare,
+                                                    one from current row and one from the next: */
+                                                    x = rows[i].getElementsByTagName("TD ")[n];
+                                                    y = rows[i + 1].getElementsByTagName("TD ")[n];
+                                                    /* Check if the two rows should switch place,
+                                                    based on the direction, asc or desc: */
+                                                    if (dir == "asc ") {
+                                                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                                            // If so, mark as a switch and break the loop:
+                                                            shouldSwitch = true;
+                                                            break;
+                                                        }
+                                                    } else if (dir == "desc ") {
+                                                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                                            // If so, mark as a switch and break the loop:
+                                                            shouldSwitch = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                if (shouldSwitch) {
+                                                    /* If a switch has been marked, make the switch
+                                                    and mark that a switch has been done: */
+                                                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                                    switching = true;
+                                                    // Each time a switch is done, increase this count by 1:
+                                                    switchcount++;
+                                                } else {
+                                                    /* If no switching has been done AND the direction is "asc ",
+                                                    set the direction to "desc " and run the while loop again. */
+                                                    if (switchcount == 0 && dir == "asc ") {
+                                                        dir = "desc ";
+                                                        switching = true;
+                                                    }
+                                                    if (Number(x.innerHTML) > Number(y.innerHTML)) {
+                                                        shouldSwitch = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                    }
+                                    </script> -->
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#example').DataTable();
+                                        });
+                                    </script>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Worldwide Alcohol Consumption</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <!-- Leaflet CSS & JS-->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+        crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+        crossorigin=""></script>
+
+    <!-- d3 JavaScript -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
+
+    <!-- Leaflet-Choropleth JavaScript -->
+    <script type="text/javascript" src="static/js/choropleth.js"></script>
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                    aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+                <a class="navbar-brand" href="/home" style="color: white; background-color: navy;">
+                    <span class="nav-color">World Alcohol Consumption</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <ul class="nav navbar-nav navbar-left" style="background-color:rgb(120, 234, 225);">
+                    <li><a href="/datatable">Data</a></li>
+                    <li><a href="/summary">Summary</a></li>
+                    <li><a href="/rate">Consumption Rate</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- The div where we will inject our map -->
+    <div id="drinkButton" name="drinkButton">
+        <button id="beer" onclick="createChoropleth('Beer_Percent')">Beer</button>
+        <!-- <button id="beer">Beer</button> -->
+        <button id="wine" onclick="createChoropleth('Wine_Percent')">Wine</button>
+        <!-- <button id="wine">Wine</button> -->
+        <button id="spirits" onclick="createChoropleth('Spirits_Percent')">Spirits</button>
+        <!-- <button id="spirits">Spirits</button> -->
+        <button id="other" onclick="createChoropleth('Other_Percent')">Other</button>
+        <!-- <button id="other">Other</button> -->
+        <!-- <select id="selDataset" onchange="getData(this.value)">
+            <option value="beerData">Beer</option>
+            <option value="wineData">Wine</option>
+            <option value="spiritsData">Spirits</option>
+            <option value="otherData">Other</option>
+        </select> -->
+    </div>
+    <br>
+
+    <div id="mapcontainer">
+        <div id="map"></div>
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <br>
+    <br>
+    <!-- <div id="ratecontainer">
+    <div class="charts" id="consumeRate"></div></div>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/consumeRate.js') }}"></script>
+    <br>
+    <br>
+    <div id="gdpcontainer">
+    <div class="charts" id="consumeGDP"></div></div>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/consumeGDP.js') }}"></script>
+    <br>
+    <br> -->
+</body>
+<br>
+
+</html>
