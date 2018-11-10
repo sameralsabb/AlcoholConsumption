@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Worldwide Alcohol Consumption</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+</head>
+
+<body style="background-color: lightgray">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                    aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+                <a class="navbar-brand" href="home.html" style="color: white; background-color: navy;">
+                    <span class="nav-color">World Alcohol Consumption</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="datatable.html">Data</a></li>
+                    <li><a href="story.html">Story</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <h2>Summary</h2>
+                            <div class="col-md-12">
+                                <p>The objective of our project was to examine alcohol consumption in most of the countries
+                                    in the world in relation to various factors like Gross Domestic Product (GDP), Mortality
+                                    Rate, and other factors.<br /></p>
+                                </div>
+                            <h3>Process</h3>
+                            <div class "col-md-12">
+                                <ul>
+                                    <li>Gathering our datasets, of which we pulled data from Wikipedia (for alcohol consumption
+                                        in countries across the world and the popularity of types of alcohol in each country.
+                                        Also gathered data (placeholder text)</li>
+                                    <li>Also found a resource online that provided the vector data needed to draw borders
+                                        for our choropleth map that we then translated from json into geojson.</li>
+                                    <li>After gathering our data, we cleaed it in Excel and Pandas, made it into a dataframe,
+                                        then created a SQLite database from our data which we connected via Flask.</li>
+                                    <li>After getting our data connected to our front-end, we created a visualization using
+                                        Leaflet.
+                                    </li>
+                                    <li>Then created a choropleth map shading the various countries based on the type of
+                                        alcohol (beer, wine, or spirits).</li>
+                                    <li>Also created visualizations showcasing the potential relationship between GDP and
+                                        Total Alcohol Consumption and another visualization.</li>
+                                </ul>
+                            </div>
+                            <h3>Complications</h3>
+                            <div class "col-md-12">
+                                <ul>
+                                    <li>First issue we ran into was the SQLite database not having the correct primary key
+                                        as well as being in the wrong data type, i.e. switching from TEXT to FLOAT and vice
+                                        versa.
+                                    </li>
+                                    <li>Then ran into an issue with connecting our SQLite database to our Flask app.</li>
+                                    <li>Ran into issues getting our Leaflet map to work correctly.</li>
+                                    <li>Minor issue getting our HTML pages linked correctly via Flask, but that was a easy
+                                        fix by referencing the correct route.</li>
+                                    <li>Most complicated issue that we had a ton of help from our honorary 5th member (Julien!)
+                                        was combining the vectormap.geojson that had our border data and our SQLite data.
+                                        SQLite data contained the favorite types of alcohol by percent that NEEDED to be
+                                        in the .geojson so that we could reference it in the choropleth call.</li>
+                                    <li>Issue creating a filter button for our choropleth that would filter between the different
+                                        types of favorite alcohol in countries.</li>
+                                </ul>
+                            </div>
+                            <h3>Conclusion</h3>
+                            <div class "col-md-12">
+                                <ul>
+                                    <li>Our choropleth map hopefully looks cool and beer overall seems to be the alcoholic beverage of choice in most countries.</li>
+                                    <li>There doesn't seem to be a relationship between GDP and Total Alcohol Consumption according to our scatter plot.</li>
+                                    <li>(Placeholder Text).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
